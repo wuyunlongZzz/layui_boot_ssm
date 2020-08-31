@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.qf.mapper.ItemsMapper" >
+
+	<select id="select" parameterType="cn.qf.pojo.Items" resultType="cn.qf.pojo.Items">
+		select * from items
+		<where>
+			<if test="name!=null and name!=''">name like "%"#{name}"%"</if>
+			<if test="createtime!=null and createtime!=''">and createtime like "%"#{createtime}"%"</if>
+		</where>
+		limit #{sp},#{limit}</select>
+	<select id="selectTc" parameterType="cn.qf.pojo.Items" resultType="int">
+		select count(id) from items
+		<where>
+			<if test="name!=null and name!=''">name like "%"#{name}"%"</if>
+			<if test="createtime!=null and createtime!=''">and createtime like "%"#{createtime}"%"</if>
+		</where></select>
+	<insert id="add" parameterType="cn.qf.pojo.Items">
+		insert into items(name,price,createtime,status,detail)value
+		(#{name},#{price},#{createtime},#{status},#{detail})</insert>
+	<sql id="delsql">
+		delete from items where id in
+		<foreach collection="array" item="ad" separator="," open="(" close=")">#{ad}</foreach></sql>
+	<delete id="del" parameterType="java.util.Arrays">
+		<include refid="delsql"></include></delete>
+	<delete id="delById" parameterType="int">
+		delete from items where id=#{id}</delete>
+	<update id="update" parameterType="cn.qf.pojo.Items">
+    	update items set name=#{name},price=#{price},createtime=#{createtime},
+	    status=#{status},detail=#{detail} where id=#{id}</update>
+
+</mapper>
